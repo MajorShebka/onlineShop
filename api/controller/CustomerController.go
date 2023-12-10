@@ -21,7 +21,7 @@ func (c *CustomerController) Init(e *echo.Echo) {
 			return new(auth.JWTCustomClaims)
 		},
 		SigningKey:  []byte("secret"),
-		TokenLookup: "header:auth",
+		TokenLookup: "header:user",
 	}
 	e.POST("/customer", c.createCustomer)
 	e.GET("/customer", c.getCustomers)
@@ -59,7 +59,10 @@ func (c *CustomerController) addProductToCustomer(ctx echo.Context) error {
 	user := ctx.Get("user").(*jwt.Token)
 	claims := user.Claims.(*auth.JWTCustomClaims)
 
-	json.NewDecoder(ctx.Request().Body).Decode(&basket)
+	err := json.NewDecoder(ctx.Request().Body).Decode(&basket)
+	if err != nil {
+		panic(err)
+	}
 	basket.CustomerId = claims.Id
 	c.service.AddProduct(basket)
 
