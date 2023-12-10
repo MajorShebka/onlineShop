@@ -9,12 +9,12 @@ function Products() {
                 return res.json()
             }
         ).then(data => {
-            const cookies = new Cookies()
-            console.log(cookies.get("token"))
             setProducts(data)
             })
         },
         [])
+    const c = new Cookies()
+    console.log(c.get("token"))
     return (
         <div className="cards">
             {products && products.map((pr) => {

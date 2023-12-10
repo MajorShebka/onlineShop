@@ -9,6 +9,7 @@ import Product from "./components/Product.tsx";
 import Auth from "./components/Auth.tsx";
 import { CookiesProvider } from "react-cookie"
 import {Header} from "./components/Header.tsx";
+import Basket from "./components/Basket.tsx";
 
 const router = createBrowserRouter([
     {
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
     {
         path: "/auth",
         element: <Auth/>
+    },
+    {
+        path: "/basket",
+        element: <Basket/>
     }
 ]);
 

@@ -5,11 +5,12 @@ export const Header = () => {
     const cookies = new Cookies()
     const handleSubmit = (e: React.FormEvent) => {
         cookies.set("token", "")
+        cookies.set("login", "")
     }
     return (
         <div className="header">
             {cookies.get("token") == "" ? <a href={"/auth"}><button>Auth</button></a>:
-                <form onSubmit={handleSubmit}><h1>{cookies.get("token")}</h1>
+                <form onSubmit={handleSubmit}><h1><a href={"/basket"}>{cookies.get("login")}</a></h1>
                     <button>Sign Out</button>
                 </form>
             }
