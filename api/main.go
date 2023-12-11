@@ -1,7 +1,7 @@
 package main
 
 import (
-	"OnlineShop/api/controller"
+	"OnlineShop/controller"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )

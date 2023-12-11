@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"OnlineShop/api/auth"
-	"OnlineShop/api/entity"
-	"OnlineShop/api/service"
+	"OnlineShop/auth"
+	"OnlineShop/entity"
+	"OnlineShop/service"
 	"encoding/json"
 	"github.com/golang-jwt/jwt/v5"
 	echojwt "github.com/labstack/echo-jwt/v4"

@@ -1,0 +1,35 @@
+version: "3"
+
+services:
+  server:
+    build: api/
+    command: go run main.go
+    ports:
+      - '8080:8080'
+  pg:
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+    ports:
+        - '5433:5432'
+    volumes:
+        - db:/var/lib/postgresql/data
+        - ./db/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
+  front:
+    build: front/react-app/
+    command: sh -c 'npm install && npm run dev -- --host'
+    ports:
+      - '5173:5173'
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pg-admin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin_password
+    ports:
+      - "5050:80"
+volumes:
+  db:
+    driver: local

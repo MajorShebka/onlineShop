@@ -1,7 +1,7 @@
 package service
 
 import (
-	"OnlineShop/api/entity"
+	"OnlineShop/entity"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -10,32 +10,34 @@ import (
 type CustomerService struct {
 }
 
-func (s *CustomerService) CreateCustomer(customer entity.Customer) {
-	databaseUrl := "postgres://root:root@localhost/online_shop"
+func GetDb() *gorm.DB {
+	databaseUrl := "postgres://root:root@pg/root"
 	db, err := gorm.Open(postgres.Open(databaseUrl), &gorm.Config{})
 	if err != nil {
 		panic("Failed to connect database!")
 	}
 
+	return db
+}
+
+func (s *CustomerService) CreateCustomer(customer entity.Customer) {
+	db := GetDb()
+
 	hashedPass, _ := bcrypt.GenerateFromPassword([]byte(customer.Password), 1)
 	customer.Password = string(hashedPass)
 
-	err = db.Create(&customer).Error
+	err := db.Create(&customer).Error
 	if err != nil {
 		panic(err)
 	}
 }
 
 func (s *CustomerService) GetAllCustomers() []entity.Customer {
-	databaseUrl := "postgres://root:root@localhost/online_shop"
-	db, err := gorm.Open(postgres.Open(databaseUrl), &gorm.Config{})
-	if err != nil {
-		panic("Failed to connect database!")
-	}
+	db := GetDb()
 
 	customers := make([]entity.Customer, 0)
 
-	err = db.Preload("Products").Find(&customers).Error
+	err := db.Preload("Products").Find(&customers).Error
 	if err != nil {
 		panic(err)
 	}
@@ -44,14 +46,10 @@ func (s *CustomerService) GetAllCustomers() []entity.Customer {
 }
 
 func (s *CustomerService) SignIn(customer entity.Customer) entity.Customer {
-	databaseUrl := "postgres://root:root@localhost/online_shop"
-	db, err := gorm.Open(postgres.Open(databaseUrl), &gorm.Config{})
+	db := GetDb()
 	pass := customer.Password
-	if err != nil {
-		panic("Failed to connect database!")
-	}
 
-	err = db.Preload("Products").Where("login = ?", customer.Login).Take(&customer).Error
+	err := db.Preload("Products").Where("login = ?", customer.Login).Take(&customer).Error
 	if err != nil {
 		panic(err)
 	}
@@ -65,26 +63,18 @@ func (s *CustomerService) SignIn(customer entity.Customer) entity.Customer {
 }
 
 func (s *CustomerService) RemoveCustomer(customer entity.Customer) {
-	databaseUrl := "postgres://root:root@localhost/online_shop"
-	db, err := gorm.Open(postgres.Open(databaseUrl), &gorm.Config{})
-	if err != nil {
-		panic("Failed to connect database!")
-	}
+	db := GetDb()
 
-	err = db.Delete(&customer).Error
+	err := db.Delete(&customer).Error
 	if err != nil {
 		panic(err)
 	}
 }
 
 func (s *CustomerService) AddProduct(basket entity.Basket) {
-	databaseUrl := "postgres://root:root@localhost/online_shop"
-	db, err := gorm.Open(postgres.Open(databaseUrl), &gorm.Config{})
-	if err != nil {
-		panic("Failed to connect database!")
-	}
+	db := GetDb()
 
-	err = db.Create(&basket).Error
+	err := db.Create(&basket).Error
 	if err != nil {
 		panic(err)
 	}
